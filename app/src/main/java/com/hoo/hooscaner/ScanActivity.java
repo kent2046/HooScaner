@@ -61,13 +61,13 @@ public class ScanActivity extends AppCompatActivity implements QRCodeView.Delega
         server.setDataListener(this);
         server.start();
 
-        tvState.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String a =null;
-                a.split(",");
-            }
-        });
+//        tvState.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String a =null;
+//                a.split(",");
+//            }
+//        });
 
 
         mDecoder = Ryqr.newDecoder();
