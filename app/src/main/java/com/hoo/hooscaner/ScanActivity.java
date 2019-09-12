@@ -6,8 +6,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.hoo.hooscaner.modle.SocketErrorBean;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -36,6 +43,10 @@ public class ScanActivity extends AppCompatActivity implements QRCodeView.Delega
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
+        EventBus.getDefault().register(this);
+
+        HooApplication.app.init();
+        HooApplication.app.addActivity(this);
 
         tvState = findViewById(R.id.tv_state);
         tvScan = findViewById(R.id.tv_scan);
@@ -49,6 +60,14 @@ public class ScanActivity extends AppCompatActivity implements QRCodeView.Delega
         server = new HooConnetServer(20000);
         server.setDataListener(this);
         server.start();
+
+        tvState.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String a =null;
+                a.split(",");
+            }
+        });
 
 
         mDecoder = Ryqr.newDecoder();
@@ -223,5 +242,21 @@ public class ScanActivity extends AppCompatActivity implements QRCodeView.Delega
         if (!EasyPermissions.hasPermissions(this, perms)) {
             EasyPermissions.requestPermissions(this, "扫描二维码需要打开相机和散光灯的权限", REQUEST_CODE_QRCODE_PERMISSIONS, perms);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGetMessage(SocketErrorBean message) {
+        if (server != null) {
+            try {
+                server.stop();
+                server = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        showToast("new Socket");
+        server = new HooConnetServer(20000);
+        server.setDataListener(this);
+        server.start();
     }
 }

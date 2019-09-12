@@ -1,5 +1,10 @@
 package com.hoo.hooscaner;
 
+import android.util.Log;
+
+import com.hoo.hooscaner.modle.SocketErrorBean;
+
+import org.greenrobot.eventbus.EventBus;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -75,9 +80,11 @@ public class HooConnetServer extends WebSocketServer {
     @Override
     public void onError(WebSocket conn, Exception ex) {
         ex.printStackTrace();
+        Log.e("NONO","NONONONONO");
         if (conn != null) {
             // some errors like port binding failed may not be assignable to a specific websocket
         }
+        EventBus.getDefault().post(new SocketErrorBean());
     }
 
     @Override
